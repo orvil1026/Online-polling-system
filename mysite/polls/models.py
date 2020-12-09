@@ -47,7 +47,7 @@ class Poll(models.Model):
         return True
     
     @property
-    def get_votes_count(self):
+    def get_vote_count(self):
         return self.vote_set.count()
 
     def __str__(self):

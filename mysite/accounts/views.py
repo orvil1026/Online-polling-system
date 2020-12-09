@@ -17,12 +17,13 @@ def login_user(request):
         username=request.POST.get('username')
         password=request.POST.get('password')
         user=authenticate(request,username=username,password=password)
-    
+          
         if user is not None:
             
-            login=(request,user)
-            redirect_url = request.GET.get('next', 'home')
+            login(request,user)        
+            redirect_url = request.GET.get('next','home')
             return redirect(redirect_url)
+            
                      
         else:
             messages.error(request,"Username or password is not correct",

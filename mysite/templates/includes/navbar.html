@@ -15,11 +15,11 @@
         </ul>
         <div class="navbar-nav ml-auto">
             {% if request.user.is_authenticated %}
-            <a class="nav-link" href="{% url 'polls:quiz' %}">My Polls</a>
+           
             <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
             {% else %}
             <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
-            <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+            
             {% endif %}
         </div>
     </div>

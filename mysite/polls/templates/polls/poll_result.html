@@ -40,7 +40,7 @@
                 {% endfor %}
             </ul>
             {% endif %}
-            <a class="btn btn-primary mt-3" href="#" role="button">Back To Polls</a>
+            <a class="btn btn-primary mt-3" href="{% url 'polls:list' quiz_id%}" role="button">Back To Polls</a>
         </div>
 
     </div>

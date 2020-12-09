@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 # Create your views here.
 
-@login_required
+@login_required()
 def quiz(request):
     quiz_exists=False
     all_quiz_id=Quiz.objects.all()
@@ -50,7 +50,7 @@ def quiz(request):
 
     
 
-@login_required
+@login_required()
 def polls_list(request,quiz_id):
     quiz=Quiz.objects.get(quiz_id__exact=quiz_id)
     all_polls=quiz.poll_set.all()
@@ -86,12 +86,13 @@ def polls_list(request,quiz_id):
     }
     return render(request, 'polls/polls_list.html', context)
 
+@login_required()
 def poll_detail(request,poll_id):
 
     quiz_id=request.session['quizId']
     poll=get_object_or_404(Poll,id=poll_id)
     if not poll.active :
-        return render(request,'polls/poll_result.html',{'poll':poll})
+        return render(request,'polls/poll_result.html',{'poll':poll,'quiz_id':quiz_id})
 
    
 
@@ -108,11 +109,13 @@ def poll_detail(request,poll_id):
 def poll_vote(request,poll_id):
     poll=get_object_or_404(Poll,pk=poll_id)
     choice_id=request.POST.get('choice')
+    quiz_id=request.session['quizId']
 
     if not poll.user_can_vote(request.user):
         messages.error(
             request,"You already voted this poll", extra_tags='alert alert-warning alert-dismissible fade show')
-        return redirect('polls:list')
+        return render(request,"polls/poll_result.html",{'poll':poll,'quiz_id':quiz_id})
+
 
     if choice_id:
         choice=Choice.objects.get(id=choice_id)
