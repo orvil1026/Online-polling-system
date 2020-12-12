@@ -11,6 +11,7 @@ from .forms import PollAddForm, EditPollForm, ChoiceAddForm,EnterQuizForm
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
+from django.http import JsonResponse
 # Create your views here.
 
 @login_required()
@@ -53,7 +54,7 @@ def quiz(request):
 @login_required()
 def polls_list(request,quiz_id):
     quiz=Quiz.objects.get(quiz_id__exact=quiz_id)
-    all_polls=quiz.poll_set.all()
+    all_polls=quiz.poll_set.all().order_by('id')
     
     request.session['quizId']=quiz_id
 
@@ -114,7 +115,7 @@ def poll_vote(request,poll_id):
     if not poll.user_can_vote(request.user):
         messages.error(
             request,"You already voted this poll", extra_tags='alert alert-warning alert-dismissible fade show')
-        return render(request,"polls/poll_result.html",{'poll':poll,'quiz_id':quiz_id})
+        return render(request,"polls/poll_result.html",{'poll':poll,'quiz_id':quiz_id,'poll_id':poll_id})
 
 
     if choice_id:
@@ -122,12 +123,26 @@ def poll_vote(request,poll_id):
         vote=Vote(user=request.user,poll=poll,choice=choice)
         vote.save()
         print(vote)
-        return render(request,"polls/poll_result.html",{'poll':poll})
+        return render(request,"polls/poll_result.html",{'poll':poll,'quiz_id':quiz_id,'poll_id':poll_id})
     else:
         messages.error(
             request, "No choice selected", extra_tags='alert alert-warning alert-dismissible fade show')
         return redirect("polls:detail", poll_id)
 
-    return render(request,"polls/poll_result.html",{'poll':poll})
+    return render(request,"polls/poll_result.html",{'poll':poll,'quiz_id':quiz_id,'poll_id':poll_id})
 
     
+@login_required()
+def resultsData(request,poll_id):
+
+    votedata=[]
+    poll=get_object_or_404(Poll,pk=poll_id)
+    votes=poll.choice_set.all()
+
+    for i in votes:
+        votedata.append({i.choice_text:i.get_vote_count})
+    print(votedata)
+
+    return JsonResponse(votedata,safe=False)
+
+
