@@ -92,7 +92,7 @@ The Online Polling System is built for teachers to help them during online lectu
 
 - [Orvil D'silva](https://www.linkedin.com/in/orvil-d-silva-469a331b4/)
 - [Jason Dsouza](https://github.com/JasonD13)
-- Ralph Dsouza
+- [Ralph Dsouza](https://github.com/RD0410)
 - [Steve Gonasalves](https://github.com/Steve228)
 
   
